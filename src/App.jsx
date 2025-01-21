@@ -67,8 +67,10 @@ export default function Home() {
 
   useEffect(() => {
     document.addEventListener("mouseup", handleTextSelection);
+    document.addEventListener("touchend", handleTextSelection);
     return () => {
       document.removeEventListener("mouseup", handleTextSelection);
+      document.removeEventListener("touchend", handleTextSelection);
     };
   }, []);
 
