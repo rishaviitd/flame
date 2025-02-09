@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import word from "./assets/word.png";
 import paragraph from "./assets/paragraph.png";
 import paige from "./assets/paige.png";
+import hero from "./assets/macbook.png";
 // Feature Card Component
 const FeatureCard = ({ icon, title, description }) => {
   return (
@@ -20,28 +21,46 @@ function App() {
   return (
     <div className="min-h-screen">
       {/* Navbar */}
-      <nav className="bg-white shadow-md px-6 py-3 flex justify-between items-center">
+      {/* <nav className="bg-white shadow-md px-6 py-3 flex justify-between items-center fixed top-0 w-full z-50">
         <div className="flex items-center space-x-2">
           <FaBook className="text-blue-600 text-xl" />
           <span className="text-xl font-semibold text-blue-600">PaiGE</span>
         </div>
-      </nav>
+      </nav> */}
 
       {/* Landing Page Content */}
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <div className="bg-white h-[calc(100vh-64px)] flex items-center">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        <div
+          className="h-screen flex items-center bg-cover bg-center bg-no-repeat relative w-full"
+          style={{
+            backgroundImage: `url(${hero})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          {/* Darker overlay for better text visibility */}
+          <div className="absolute inset-0 bg-black/75"></div>
+
+          {/* PaiGE Logo positioned in top left */}
+          <div className="absolute top-6 left-8 flex items-center space-x-3 z-20">
+            <FaBook className="text-blue-400 text-3xl" />
+            <span className="text-3xl font-bold text-white tracking-wide">
+              PaiGE
+            </span>
+          </div>
+
+          <div className="container mx-auto px-4 text-center relative z-10">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-8 leading-tight">
               Transform Your Reading Experience
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-white mb-12 max-w-3xl mx-auto leading-relaxed font-light">
               Struggling to understand complex texts? PaiGE helps you comprehend
               better, learn faster, and enjoy reading like never before.
             </p>
             <Link
               to="/app"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
+              className="bg-blue-500 text-white px-10 py-4 rounded-lg text-xl font-semibold hover:bg-blue-600 transition-colors shadow-lg hover:shadow-xl"
             >
               Get Started Free
             </Link>
