@@ -1,14 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import ReactMarkdown from "react-markdown";
 
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
 const predefinedPrompts = [
-  "meaning of the word",
+  "Meaning of the word",
   "Explain the main concepts in simple terms with examples.",
   "What does this mean?",
 ];
@@ -22,7 +18,6 @@ export default function Home() {
   const [popupVisible, setPopupVisible] = useState(false);
   const [copiedText, setCopiedText] = useState("");
   const pdfViewerRef = useRef(null);
-  const popupRef = useRef(null);
 
   const handlePdfUpload = (event) => {
     const file = event.target.files[0];
@@ -36,10 +31,20 @@ export default function Home() {
     setError("");
     try {
       const fullPrompt = `${copiedText}\n\n${prompt}`;
-      const result = await model.generateContent(fullPrompt);
-      const aiResponse = result.response.text();
+      const response = await fetch("http://127.0.0.1:8000/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: fullPrompt }),
+      });
 
-      setResponse(aiResponse);
+      if (!response.ok) {
+        throw new Error("Failed to fetch response from the server.");
+      }
+
+      const data = await response.json();
+      setResponse(data.result); // Fix: Access `result` instead of `response`
     } catch (err) {
       setError("Failed to generate response. Please try again.");
     } finally {
@@ -76,14 +81,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen">
-      {/* Centered PDF Upload Section */}
+      {/* PDF Upload Section */}
       {!pdfFile && (
         <div className="flex items-center justify-center flex-grow">
           <div className="bg-gray-200 p-6 rounded-lg shadow-md text-center">
-            <h2
-              className="text-xl font-semibold mb-4"
-              style={{ color: "black" }}
-            >
+            <h2 className="text-xl font-semibold mb-4 text-black">
               Upload the PDF you want to view
             </h2>
             <label className="cursor-pointer">
@@ -119,24 +121,13 @@ export default function Home() {
 
       {/* Popup for Copied Text and User Question */}
       {popupVisible && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-          ref={popupRef}
-        >
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-lg shadow-lg w-4/5 max-w-3xl h-auto max-h-[80%] overflow-auto">
-            <h2
-              className="text-lg font-semibold mb-2"
-              style={{ color: "black" }}
-            >
+            <h2 className="text-lg font-semibold mb-2 text-black">
               Selected Text
             </h2>
-            <p className="mb-2" style={{ color: "black" }}>
-              {copiedText}
-            </p>
-            <h2
-              className="text-lg font-semibold mb-2"
-              style={{ color: "black" }}
-            >
+            <p className="mb-2 text-black">{copiedText}</p>
+            <h2 className="text-lg font-semibold mb-2 text-black">
               Your Question
             </h2>
             <div className="flex items-center mb-2">
@@ -170,17 +161,8 @@ export default function Home() {
             {/* Display Response */}
             {response && (
               <div className="mt-4 p-2 border border-gray-300 rounded">
-                <strong style={{ color: "black" }}>Response:</strong>
-                <ReactMarkdown
-                  style={{ color: "black" }}
-                  components={{
-                    p: ({ node, ...props }) => (
-                      <p {...props} style={{ color: "black" }} />
-                    ),
-                  }}
-                >
-                  {response}
-                </ReactMarkdown>
+                <strong className="text-black">Response:</strong>
+                <ReactMarkdown className="text-black">{response}</ReactMarkdown>
               </div>
             )}
             <button
