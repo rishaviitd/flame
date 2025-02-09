@@ -159,8 +159,6 @@ function App() {
           </div>
         </div>
 
-        {/* How It Works Section */}
-
         {/* CTA Section */}
         <div className="bg-blue-600 py-16">
           <div className="container mx-auto px-4 text-center">

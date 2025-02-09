@@ -19,6 +19,8 @@ export default function App() {
   const [error, setError] = useState("");
   const [popupVisible, setPopupVisible] = useState(false);
   const [copiedText, setCopiedText] = useState("");
+  const [conversations, setConversations] = useState([]);
+  const [showConversationsModal, setShowConversationsModal] = useState(false);
   const pdfViewerRef = useRef(null);
 
   const handlePdfUpload = (event) => {
@@ -46,7 +48,23 @@ export default function App() {
       }
 
       const data = await response.json();
-      setResponse(data.result); // Fix: Access `result` instead of `response`
+      setResponse(data.result);
+
+      // Save conversation to local storage
+      const newConversation = {
+        id: Date.now(),
+        selectedText: copiedText,
+        question: prompt,
+        answer: data.result,
+        timestamp: new Date().toISOString(),
+      };
+
+      const updatedConversations = [...conversations, newConversation];
+      setConversations(updatedConversations);
+      localStorage.setItem(
+        "conversations",
+        JSON.stringify(updatedConversations)
+      );
     } catch (err) {
       setError("Failed to generate response. Please try again.");
     } finally {
@@ -72,6 +90,14 @@ export default function App() {
     setResponse("");
   };
 
+  // Load conversations from local storage on component mount
+  useEffect(() => {
+    const savedConversations = localStorage.getItem("conversations");
+    if (savedConversations) {
+      setConversations(JSON.parse(savedConversations));
+    }
+  }, []);
+
   useEffect(() => {
     document.addEventListener("mouseup", handleTextSelection);
     document.addEventListener("touchend", handleTextSelection);
@@ -81,9 +107,74 @@ export default function App() {
     };
   }, []);
 
+  // Add this new component for the conversations modal
+  const ConversationsModal = () => (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-xl shadow-xl w-4/5 max-w-4xl h-[80vh] overflow-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Previous Conversations
+          </h2>
+          <button
+            onClick={() => setShowConversationsModal(false)}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div className="space-y-6">
+          {conversations.map((conv) => (
+            <div
+              key={conv.id}
+              className="bg-gray-50 p-6 rounded-lg border border-gray-200"
+            >
+              <div className="text-sm text-gray-500 mb-2">
+                {new Date(conv.timestamp).toLocaleString()}
+              </div>
+              <div className="font-medium text-gray-700 mb-4">
+                <h3 className="text-lg font-semibold mb-2">Selected Text:</h3>
+                <p className="p-3 bg-white rounded-lg">{conv.selectedText}</p>
+              </div>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-blue-600 mb-2">
+                  Question:
+                </h3>
+                <p className="text-gray-700">{conv.question}</p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Answer:</h3>
+                <div className="prose prose-blue max-w-none">
+                  <ReactMarkdown>{conv.answer}</ReactMarkdown>
+                </div>
+              </div>
+            </div>
+          ))}
+          {conversations.length === 0 && (
+            <div className="text-center text-gray-500 py-8">
+              No previous conversations found
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      <Navbar />
+      <Navbar onShowConversations={() => setShowConversationsModal(true)} />
 
       {/* PDF Upload Section */}
       {!pdfFile && (
@@ -320,6 +411,9 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Add the conversations modal */}
+      {showConversationsModal && <ConversationsModal />}
     </div>
   );
 }
