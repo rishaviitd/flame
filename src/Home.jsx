@@ -2,7 +2,9 @@ import React from "react";
 import { FaBook, FaBrain, FaLightbulb } from "react-icons/fa";
 import { BsTranslate } from "react-icons/bs";
 import { Link } from "react-router-dom";
-
+import word from "./assets/word.png";
+import paragraph from "./assets/paragraph.png";
+import paige from "./assets/paige.png";
 // Feature Card Component
 const FeatureCard = ({ icon, title, description }) => {
   return (
@@ -28,7 +30,7 @@ function App() {
       {/* Landing Page Content */}
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <div className="bg-white py-16">
+        <div className="bg-white h-[calc(100vh-64px)] flex items-center">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Transform Your Reading Experience
@@ -45,7 +47,94 @@ function App() {
             </Link>
           </div>
         </div>
+        <div className="bg-white py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-12">
+              How It Works
+            </h2>
+            <div className="max-w-5xl mx-auto space-y-16">
+              {/* Step 1 */}
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="md:w-2/3 flex justify-center">
+                  <button className="bg-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                      />
+                    </svg>
+                    Upload PDF
+                  </button>
+                </div>
+                <div className="md:w-1/3">
+                  <h3 className="text-2xl font-semibold mb-3">
+                    1. Upload Your Content
+                  </h3>
+                  <p className="text-gray-600">
+                    Upload any PDF document - textbooks, research papers,
+                    novels, or articles.
+                  </p>
+                </div>
+              </div>
 
+              {/* Step 2 */}
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="md:w-2/3">
+                  <div className="flex gap-4 max-w-[500px]">
+                    <img
+                      src={word}
+                      alt="Select text demonstration"
+                      className="w-1/2 h-auto rounded-lg shadow-md"
+                    />
+                    <img
+                      src={paragraph}
+                      alt="Highlight demonstration"
+                      className="w-1/2 h-auto rounded-lg shadow-md"
+                    />
+                  </div>
+                </div>
+                <div className="md:w-1/3">
+                  <h3 className="text-2xl font-semibold mb-3">
+                    2. Select Text
+                  </h3>
+                  <p className="text-gray-600">
+                    Simply highlight any word or paragraph you want to
+                    understand better.
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="md:w-2/3">
+                  <div className="max-w-[500px]">
+                    <img
+                      src={paige}
+                      alt="AI response demonstration"
+                      className="w-full h-auto rounded-lg shadow-md"
+                    />
+                  </div>
+                </div>
+                <div className="md:w-1/3">
+                  <h3 className="text-2xl font-semibold mb-3">
+                    3. Get AI Insights
+                  </h3>
+                  <p className="text-gray-600">
+                    Ask questions and receive instant, intelligent explanations.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         {/* Features Section */}
         <div className="py-16 container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
@@ -69,6 +158,8 @@ function App() {
             />
           </div>
         </div>
+
+        {/* How It Works Section */}
 
         {/* CTA Section */}
         <div className="bg-blue-600 py-16">
