@@ -33,6 +33,12 @@ export default function App() {
   const handleQuestionSubmit = async (prompt) => {
     setLoading(true);
     setError("");
+    // Add disclaimer for the first request
+    if (conversations.length === 0) {
+      setResponse(
+        "Please wait for about 15 seconds for the first request to process."
+      );
+    }
     try {
       const fullPrompt = `${copiedText}\n\n${prompt}`;
       const response = await fetch("https://paige.onrender.com/generate", {
@@ -321,6 +327,7 @@ export default function App() {
                 <h2 className="text-xl font-semibold mb-2 text-gray-800">
                   Ask a Question
                 </h2>
+
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
@@ -400,7 +407,9 @@ export default function App() {
                   {error}
                 </div>
               )}
-
+              <p className="text-sm text-gray-500 bg-yellow-100 p-2 rounded">
+                Note: The first request may take 1-2 minutes to process.
+              </p>
               <button
                 onClick={handleClosePopup}
                 className="w-full mt-4 bg-gray-100 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-200 transition duration-200"
