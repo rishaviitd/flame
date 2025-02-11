@@ -1,34 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useUser } from "./UserContext"; // Import useUser
 
 const clientId =
   "289665124994-nrqbif75i72v24v4bqcpma8cfem8mg92.apps.googleusercontent.com";
 
 const Login = () => {
-  const [user, setUser] = useState(null);
+  const { setUser } = useUser(); // Get setUser from context
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check local storage for user info on component mount
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Parse and set user from local storage
-    }
-  }, []);
-
   const onSuccess = (credentialResponse) => {
-    console.log("Login Success: currentUser:", credentialResponse);
-
     const decoded = jwtDecode(credentialResponse.credential);
-    console.log("Decoded JWT:", decoded);
-
     const email = decoded.email || "No email found";
     const name = decoded.name || "No name found";
 
     const userInfo = { email, name };
-    setUser(userInfo);
+    setUser(userInfo); // Set user in context
     localStorage.setItem("user", JSON.stringify(userInfo)); // Store user info in local storage
     localStorage.setItem("token", credentialResponse.credential); // Store JWT token in local storage
 

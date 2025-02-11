@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import select from "./assets/select.png";
 import Navbar from "./components/navbar";
 import { useLocation } from "react-router-dom"; // Import useLocation
+import { useUser } from "./UserContext"; // Import useUser
 
 const predefinedPrompts = [
   "Meaning of the word",
@@ -13,6 +14,7 @@ const predefinedPrompts = [
 ];
 
 export default function App() {
+  const { user } = useUser(); // Access user from context
   const [pdfFile, setPdfFile] = useState(null);
   const [userQuestion, setUserQuestion] = useState("");
   const [response, setResponse] = useState("");
@@ -24,7 +26,7 @@ export default function App() {
   const [showConversationsModal, setShowConversationsModal] = useState(false);
   const pdfViewerRef = useRef(null);
   const location = useLocation(); // Use useLocation to access location
-  const { user } = location.state || {}; // Safely access user data
+
   const handlePdfUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -184,8 +186,8 @@ export default function App() {
     <div className="flex flex-col h-screen bg-gray-50">
       <Navbar
         onShowConversations={() => setShowConversationsModal(true)}
-        username={user.name}
-        email={user.email}
+        username={user?.name}
+        email={user?.email}
       />
 
       {/* PDF Upload Section */}

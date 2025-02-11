@@ -73,7 +73,7 @@ function App() {
             </div>
             <div className="flex justify-center">
               {user ? (
-                <Link to="/user" state={{ user }}>
+                <Link to="/app" state={{ user }}>
                   <button className="text-xl text-gray-900 bg-blue-600 text-white px-4 py-2 rounded">
                     Let's continue {user.name}
                   </button>
