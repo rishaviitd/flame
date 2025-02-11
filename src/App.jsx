@@ -6,12 +6,17 @@ import select from "./assets/select.png";
 import Navbar from "./components/navbar";
 import { useLocation } from "react-router-dom"; // Import useLocation
 import { useUser } from "./UserContext"; // Import useUser
+import { GoogleGenerativeAI } from "@google/generative-ai"; // Import the GoogleGenerativeAI
 
 const predefinedPrompts = [
   "Meaning of the word",
   "Explain the main concepts in simple terms with examples.",
   "What does this mean?",
 ];
+
+// Initialize the GoogleGenerativeAI with your API key
+const genAI = new GoogleGenerativeAI("AIzaSyBPSnyfcC6M7Ykkimx1Ndy-GGZ_FmmodYc");
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 export default function App() {
   const { user } = useUser(); // Access user from context
@@ -45,27 +50,16 @@ export default function App() {
     }
     try {
       const fullPrompt = `${copiedText}\n\n${prompt}`;
-      const response = await fetch("http://127.0.0.1:8000/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompt: fullPrompt }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch response from the server.");
-      }
-
-      const data = await response.json();
-      setResponse(data.result);
+      // Use the Gemini model to generate content
+      const result = await model.generateContent(fullPrompt);
+      setResponse(result.response.text()); // Set the response from the Gemini API
 
       // Save conversation to local storage
       const newConversation = {
         id: Date.now(),
         selectedText: copiedText,
         question: prompt,
-        answer: data.result,
+        answer: result.response.text(), // Save the response
         timestamp: new Date().toISOString(),
       };
 
