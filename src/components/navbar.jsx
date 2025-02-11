@@ -3,7 +3,7 @@ import { FaBook } from "react-icons/fa"; // For book icon
 import { BiHistory } from "react-icons/bi"; // For history/previous conversations
 import { CgProfile } from "react-icons/cg"; // For profile icon
 
-export default function Navbar({ onShowConversations }) {
+export default function Navbar({ onShowConversations, username, email }) {
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,6 +35,13 @@ export default function Navbar({ onShowConversations }) {
               </svg>
               Previous Conversations
             </button>
+            <div className="flex items-center ml-4">
+              <CgProfile className="text-blue-600 text-xl" />
+              <div className="ml-2 text-gray-800">
+                <span className="block font-semibold">{username}</span>
+                <span className="block text-sm text-gray-600">{email}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

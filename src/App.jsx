@@ -4,6 +4,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import ReactMarkdown from "react-markdown";
 import select from "./assets/select.png";
 import Navbar from "./components/navbar";
+import { useLocation } from "react-router-dom"; // Import useLocation
 
 const predefinedPrompts = [
   "Meaning of the word",
@@ -22,7 +23,8 @@ export default function App() {
   const [conversations, setConversations] = useState([]);
   const [showConversationsModal, setShowConversationsModal] = useState(false);
   const pdfViewerRef = useRef(null);
-
+  const location = useLocation(); // Use useLocation to access location
+  const { user } = location.state || {}; // Safely access user data
   const handlePdfUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -41,7 +43,7 @@ export default function App() {
     }
     try {
       const fullPrompt = `${copiedText}\n\n${prompt}`;
-      const response = await fetch("https://paige.onrender.com/generate", {
+      const response = await fetch("http://127.0.0.1:8000/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -180,7 +182,11 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      <Navbar onShowConversations={() => setShowConversationsModal(true)} />
+      <Navbar
+        onShowConversations={() => setShowConversationsModal(true)}
+        username={user.name}
+        email={user.email}
+      />
 
       {/* PDF Upload Section */}
       {!pdfFile && (

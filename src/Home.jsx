@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaBook, FaBrain, FaLightbulb } from "react-icons/fa";
 import { BsTranslate } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import word from "./assets/word.png";
 import paragraph from "./assets/paragraph.png";
 import paige from "./assets/paige.png";
+import Login from "./Login";
 // import hero from "./assets/macbook.png";
 // Feature Card Component
 const FeatureCard = ({ icon, title, description }) => {
@@ -18,6 +19,15 @@ const FeatureCard = ({ icon, title, description }) => {
 };
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* Landing Page Content */}
@@ -61,12 +71,17 @@ function App() {
                 Articles
               </span>
             </div>
-            <Link
-              to="/app"
-              className="bg-blue-600 text-white px-10 py-4 rounded-lg text-xl font-semibold hover:bg-blue-600 transition-colors shadow-lg hover:shadow-xl"
-            >
-              Get Started Free
-            </Link>
+            <div className="flex justify-center">
+              {user ? (
+                <Link to="/user" state={{ user }}>
+                  <button className="text-xl text-gray-900 bg-blue-600 text-white px-4 py-2 rounded">
+                    Let's continue {user.name}
+                  </button>
+                </Link>
+              ) : (
+                <Login />
+              )}
+            </div>
           </div>
         </div>
         <div className="bg-white py-16">
