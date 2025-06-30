@@ -15,7 +15,7 @@ const predefinedPrompts = [
 ];
 
 // Initialize the GoogleGenerativeAI with your API key
-const genAI = new GoogleGenerativeAI("AIzaSyBPSnyfcC6M7Ykkimx1Ndy-GGZ_FmmodYc");
+const genAI = new GoogleGenerativeAI("AIzaSyAB4IrBehy7Na_xPjZzTSQUYodnCSeYPKk");
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 export default function App() {
